@@ -184,7 +184,7 @@ Route::get('/delete2', function (){
 });
 
 Route::get('/softdelete', function (){
-    Post::find(2)->delete();
+    Post::find(5)->delete();
 
 });
 
@@ -197,7 +197,7 @@ Route::get('/softdelete', function (){
 //});
 
 Route::get('/readsoftdelete', function (){
-//    $post = Post::find(1);
+//    $post = Post::find(2);
 //    return $post;
 
 //    $posts = Post::withTrashed()->where('id',1)->get();
@@ -212,6 +212,15 @@ Route::get('/readsoftdelete', function (){
 
 //    return $posts;
 
+});
+
+
+Route::get('/restore', function (){
+    Post::withTrashed()->where(['id' => 1, 'is_admin' => 0])->restore();
+});
+
+Route::get('/forcedelete', function (){
+   Post::onlyTrashed()->where('is_admin', 0)->forceDelete();
 });
 
 
