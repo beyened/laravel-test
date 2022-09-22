@@ -16,9 +16,4 @@
 
 @stop
 
-
-@section('footer')
-
-{{--    <script>alert('Hello Visitor')</script>--}}
-
-@stop
+@extends('layouts.footer')

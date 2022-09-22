@@ -8,3 +8,5 @@
 
 @stop
 
+@extends('layouts.footer')
+
