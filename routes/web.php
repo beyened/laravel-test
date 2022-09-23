@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\postController;
 use App\Models\Post;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -108,124 +109,152 @@ use App\Models\Post;
 | DATABASE Eloquent ORM SQL Queries
 |--------------------------------------------------------------------------
 */
-
-Route::get('/read', function(){
-   $posts = Post::all();
-   foreach ($posts as $post){
-       echo $post->title;
-   }
-});
-
-Route::get('/find', function(){
-    $posts = Post::find(3);
-
-//    if(is_null($posts)){
-//        return abort(404);
-//    }
-
-    echo $posts->title;
-    dd($posts);
-
-});
-
-Route::get('/findwhere', function (){
-    $posts = Post::where('id',3)->orderBy('id', 'desc')->take(1)->get();
-    foreach ($posts as $post){
-        echo $post->title;
-    }
-});
-
-Route::get('/findmore', function (){
-    $posts = Post::findOrFail(1);
-    return $posts;
-
-//    $posts = Post::where('id', '<', 50)->firstOrFail();
-//    return $posts;
-
-});
-
-Route::get('/basicinsert', function (){
-   $post = new Post;
-   $post->title = "New Title";
-   $post->body = "Wow ORM is cool";
-
-   $post->save();
-});
-
-Route::get('/basicupdate', function (){
-    $post = Post::find(3);
-
-    $post->title = "New Title 2";
-    $post->body = "Wow ORM is cool 2";
-
-    $post->save();
-});
-
-Route::get('/create', function(){
-   Post::create(['title'=>'The Create methond', 'body'=>'learn PHP']);
-});
-
-//Based on two constraints
-Route::get('/update', function (){
-    Post::where('id', 4)->where('title', 'New Title')->update(['title'=>'NEW PHP Title', 'body'=>'New PHP Title 4']);
-});
-
-Route::get('/delete', function (){
-    $post = Post::find(2);
-    $post->delete();
-});
-
-Route::get('/delete2', function (){
-
-//    Post::destroy([4,5]);
-
-    Post::where('id', '<', 50)->delete();
-
-});
-
-Route::get('/softdelete', function (){
-    Post::find(5)->delete();
-
-});
-
-//Route::get('/findsoftdeleted', function (){
-//    $posts = DB::select('select * from posts where deleted_at IS NOT NULL');
 //
+//Route::get('/read', function(){
+//   $posts = Post::all();
+//   foreach ($posts as $post){
+//       echo $post->title;
+//   }
+//});
+//
+//Route::get('/find', function(){
+//    $posts = Post::find(3);
+//
+////    if(is_null($posts)){
+////        return abort(404);
+////    }
+//
+//    echo $posts->title;
+//    dd($posts);
+//
+//});
+//
+//Route::get('/findwhere', function (){
+//    $posts = Post::where('id',3)->orderBy('id', 'desc')->take(1)->get();
 //    foreach ($posts as $post){
 //        echo $post->title;
 //    }
 //});
-
-Route::get('/readsoftdelete', function (){
+//
+//Route::get('/findmore', function (){
+//    $posts = Post::findOrFail(1);
+//    return $posts;
+//
+////    $posts = Post::where('id', '<', 50)->firstOrFail();
+////    return $posts;
+//
+//});
+//
+//Route::get('/basicinsert', function (){
+//   $post = new Post;
+//   $post->title = "New Title";
+//   $post->body = "Wow ORM is cool";
+//
+//   $post->save();
+//});
+//
+//Route::get('/basicupdate', function (){
+//    $post = Post::find(3);
+//
+//    $post->title = "New Title 2";
+//    $post->body = "Wow ORM is cool 2";
+//
+//    $post->save();
+//});
+//
+//Route::get('/create', function(){
+//   Post::create(['title'=>'The Create methond', 'body'=>'learn PHP']);
+//});
+//
+////Based on two constraints
+//Route::get('/update', function (){
+//    Post::where('id', 4)->where('title', 'New Title')->update(['title'=>'NEW PHP Title', 'body'=>'New PHP Title 4']);
+//});
+//
+//Route::get('/delete', function (){
 //    $post = Post::find(2);
-//    return $post;
-
-//    $posts = Post::withTrashed()->where('id',1)->get();
+//    $post->delete();
+//});
+//
+//Route::get('/delete2', function (){
+//
+////    Post::destroy([4,5]);
+//
+//    Post::where('id', '<', 50)->delete();
+//
+//});
+//
+//Route::get('/softdelete', function (){
+//    Post::find(5)->delete();
+//
+//});
+//
+////Route::get('/findsoftdeleted', function (){
+////    $posts = DB::select('select * from posts where deleted_at IS NOT NULL');
+////
+////    foreach ($posts as $post){
+////        echo $post->title;
+////    }
+////});
+//
+//Route::get('/readsoftdelete', function (){
+////    $post = Post::find(2);
+////    return $post;
+//
+////    $posts = Post::withTrashed()->where('id',1)->get();
+////    foreach ($posts as $post){
+////        echo $post->title;
+////    }
+//
+//    $posts = Post::onlyTrashed()->get();
 //    foreach ($posts as $post){
 //        echo $post->title;
 //    }
+//
+////    return $posts;
+//
+//});
+//
+//
+//Route::get('/restore', function (){
+//    Post::withTrashed()->where(['id' => 1, 'is_admin' => 0])->restore();
+//});
+//
+//Route::get('/forcedelete', function (){
+//   Post::onlyTrashed()->where('is_admin', 0)->forceDelete();
+//});
 
-    $posts = Post::onlyTrashed()->get();
-    foreach ($posts as $post){
-        echo $post->title;
+
+/*
+|--------------------------------------------------------------------------
+| DATABASE Eloquent Relationship
+|--------------------------------------------------------------------------
+*/
+
+
+//// One-to-One relationship
+//
+//Route::get('/user/{id}/post', function ($id){
+//
+//    return User::find($id)->post->body;
+//
+//});
+//
+//// Inverse One-to-One relationship
+//Route::get('/post/{id}/user', function ($id){
+//
+//    return Post::find($id)->user->email;
+//
+//});
+
+
+Route::get('/posts', function (){
+
+    $user = Post::find(1);
+    foreach ($user->posts as $post){
+        echo $post->title."</br>";
     }
-
-//    return $posts;
-
 });
-
-
-Route::get('/restore', function (){
-    Post::withTrashed()->where(['id' => 1, 'is_admin' => 0])->restore();
-});
-
-Route::get('/forcedelete', function (){
-   Post::onlyTrashed()->where('is_admin', 0)->forceDelete();
-});
-
-
-
-
 
 
 
