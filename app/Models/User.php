@@ -43,12 +43,28 @@ class User extends Authenticatable
     ];
 
     // One-to-One Relationship
-    public function post(){
-//        return $this->hasOne('App\Post', 'the_user_id');
-        return $this->hasOne('App\Models\Post');
-    }
+//    public function post(){
+////        return $this->hasOne('App\Post', 'the_user_id');
+//        return $this->hasOne('App\Models\Post');
+//    }
 
     public function posts(){
         return $this->hasMany('App\Models\Post');
     }
+
+//    public function roles(){
+//        return $this->belongsToMany('App\Models\Role');
+////        return $this->belongsToMany('App\Models\Role', 'role_user', 'user_id', 'role_id');
+//    }
+
+    public function roles(){
+        return $this->belongsToMany('App\Models\Role')->withPivot('created_at');
+    }
+
+    public function photos(){
+
+        $this->morphMany('App\Models\Photo', 'imageable');
+
+    }
+
 }

@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\postController;
 use App\Models\Post;
 use App\Models\User;
+use App\Models\Role;
+use App\Models\Country;
 
 /*
 |--------------------------------------------------------------------------
@@ -247,14 +249,68 @@ use App\Models\User;
 //
 //});
 
-
+// One-to-Many relationship
 Route::get('/posts', function (){
 
-    $user = Post::find(1);
+    $user = User::find(1);
+//    dd($user->posts);
     foreach ($user->posts as $post){
         echo $post->title."</br>";
     }
 });
+
+// Many-to-Many relationship
+Route::get('/user/{id}/role', function ($id){
+    $user = User::find($id);
+    foreach ($user->roles as $role){
+     echo $role->name;
+    }
+
+//    $user = User::find($id)->roles()->orderBy('id', 'asc')->get();
+//    return $user;
+
+});
+
+Route::get('/role/{id}/user', function ($id){
+    $role = Role::find($id);
+    foreach ($role->users as $user){
+        echo $user->name;
+    }
+});
+
+// Accessing the intermediate table / pivot
+Route::get('/user/pivot', function (){
+    $user = User::find(1);
+
+    foreach ($user->roles as $role){
+        echo $role->pivot->created_at;
+    }
+});
+
+Route::get('/user/country', function (){
+
+    $country = Country::find(4);
+    foreach ($country->posts as $post){
+        return $post->title;
+    }
+
+});
+
+// Polymorphic Relations
+
+Route::get('user/photos', function (){
+
+    $user = User::find(2);
+
+    foreach ($user->photos as $photo){
+        return $photo;
+    }
+
+});
+
+
+
+
 
 
 

@@ -28,4 +28,10 @@ class Post extends Model
 
       }
 
+      public function photos(){
+
+          $this->morphMany(Photo::Class, 'imageable');
+
+      }
+
 }
