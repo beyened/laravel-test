@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'country_id'
     ];
 
     /**
@@ -61,10 +62,10 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Models\Role')->withPivot('created_at');
     }
 
-    public function photos(){
 
-        $this->morphMany('App\Models\Photo', 'imageable');
-
+    public function photos()
+    {
+        return $this->morphMany(Photo::class, 'imageable');
     }
 
 }

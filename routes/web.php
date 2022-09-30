@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Photo;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\postController;
 use App\Models\Post;
@@ -164,9 +165,13 @@ use App\Models\Country;
 //    $post->save();
 //});
 //
-//Route::get('/create', function(){
-//   Post::create(['title'=>'The Create methond', 'body'=>'learn PHP']);
-//});
+Route::get('/create', function(){
+   Post::create(['title'=>'Post Test', 'body'=>'Tested by learn PHP']);
+   Photo::create(['path'=>'image1.jpg', 'imageable_type'=>'App\Models\User', 'imageable_id'=>1]);
+   Photo::create(['path'=>'image2.jpg', 'imageable_type'=>'App\Models\Post', 'imageable_id'=>1]);
+   User::create(['name'=>'Beyene Dabi', 'email'=>'bey@gmail.com', 'password'=>'123', 'country_id'=>1]);
+   User::create(['name'=>'Desta Dabi', 'email'=>'des@gmail.com', 'password'=>'123', 'country_id'=>2]);
+});
 //
 ////Based on two constraints
 //Route::get('/update', function (){
@@ -300,7 +305,10 @@ Route::get('/user/country', function (){
 
 Route::get('user/photos', function (){
 
-    $user = User::find(2);
+    $user = User::find(1);
+//    $photos = $user->photos;
+//    return $photos;
+////    $upvotescount = $album->upvotes->count();
 
     foreach ($user->photos as $photo){
         return $photo;
