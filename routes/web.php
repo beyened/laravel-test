@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Photo;
+use App\Models\Tags;
+use App\Models\Video;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\postController;
 use App\Models\Post;
@@ -165,13 +167,9 @@ use App\Models\Country;
 //    $post->save();
 //});
 //
-Route::get('/create', function(){
-   Post::create(['title'=>'Post Test', 'body'=>'Tested by learn PHP']);
-   Photo::create(['path'=>'image1.jpg', 'imageable_type'=>'App\Models\User', 'imageable_id'=>1]);
-   Photo::create(['path'=>'image2.jpg', 'imageable_type'=>'App\Models\Post', 'imageable_id'=>1]);
-   User::create(['name'=>'Beyene Dabi', 'email'=>'bey@gmail.com', 'password'=>'123', 'country_id'=>1]);
-   User::create(['name'=>'Desta Dabi', 'email'=>'des@gmail.com', 'password'=>'123', 'country_id'=>2]);
-});
+//Route::get('/create', function(){
+//   Post::create(['title'=>'The Create methond', 'body'=>'learn PHP']);
+//});
 //
 ////Based on two constraints
 //Route::get('/update', function (){
@@ -301,20 +299,83 @@ Route::get('/user/country', function (){
 
 });
 
-// Polymorphic Relations
+// ##### Polymorphic Relations  #####
 
-Route::get('user/photos', function (){
+// One-to-Many Polymorphic Relationship
 
-    $user = User::find(1);
-//    $photos = $user->photos;
-//    return $photos;
-////    $upvotescount = $album->upvotes->count();
+Route::get('user/{id}/photos', function ($id){
+
+    $user = User::find($id);
 
     foreach ($user->photos as $photo){
-        return $photo;
+        return $photo->path;
     }
 
 });
+
+Route::get('post/{id}/photos', function ($id){
+
+    $post = Post::find($id);
+
+    foreach ($post->photos as $photo){
+        return $photo->path;
+    }
+
+});
+
+Route::get('photo/{id}/owner', function ($id){
+
+    $photo = Photo::findOrFail($id);
+
+    return $photo->imageable;
+
+});
+
+// Many-to-Many Polymorphic Relationship
+
+/**
+ * Get all the tags for the post.
+ */
+Route::get('post/{id}/tags', function($id){
+
+    $post = Post::find($id);
+
+    foreach ($post->tags as $tag){
+        echo $tag->name;
+    }
+//    return $post->tags;
+
+});
+
+/**
+ * Get all the tags for the video.
+ */
+Route::get('video/{id}/tags', function($id){
+
+    $video = Video::find($id);
+
+    return $video->tags;
+
+});
+
+/**
+ * Get all the posts/videos that are assigned this tag.
+ */
+
+Route::get('tags/{id}/owner', function($id){
+
+    $tags = Tags::find($id);
+
+    foreach ($tags->posts as $post){
+        return $post->title;
+    }
+
+//    return $tags->posts;
+//    return $tags->videos;
+
+});
+
+
 
 
 

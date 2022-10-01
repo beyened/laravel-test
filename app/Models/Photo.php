@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use \Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Photo extends Model
 {
@@ -15,7 +16,8 @@ class Photo extends Model
         'imageable_id'
     ];
 
-    public function imageable(){
+    public function imageable(): MorphTo
+    {
 
         return $this->morphTo();
 
