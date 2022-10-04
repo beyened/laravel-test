@@ -362,21 +362,53 @@ Route::get('video/{id}/tags', function($id){
  * Get all the posts/videos that are assigned this tag.
  */
 
-Route::get('tags/{id}/owner', function($id){
+Route::get('/tags/{id}/owner', function($id){
 
     $tags = Tags::find($id);
 
-    foreach ($tags->posts as $post){
-        return $post->title;
-    }
+//    foreach ($tags->post as $post){
+//        return $post->title;
+//    }
 
-//    return $tags->posts;
+    return $tags->posts;
 //    return $tags->videos;
 
 });
 
 
+/**
+ * Insert tags for the post.
+ */
+Route::get('addPost/tags', function(){
 
+    $post = Post::find(1);
+    $tag = Tags::create(['name'=>"Inserted Tag"]);
+    $post->tags()->save($tag);
+
+});
+
+
+/**
+ * Update tags for the post.
+ */
+Route::get('updatePost/tags', function(){
+
+    $post = Post::find(1);
+    $tag = $post->tags()->whereId(3)->first();
+    $tag->name = "updated tag";
+    $post->tags()->save($tag);
+
+});
+
+/**
+ * Delete tags for the post.
+ */
+Route::get('deletePost/tags', function(){
+
+    $post = Post::find(1);
+    $post->tags()->whereId(3)->delete();
+
+});
 
 
 
